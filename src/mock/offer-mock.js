@@ -1,5 +1,5 @@
 import { getRandomArrayElement, getID, getRandomInt } from '../utils';
-import { POINT_TYPES, OFFERS } from '../consts';
+import { POINT_TYPES, OFFERS } from '../const';
 
 const offerID = getID();
 
