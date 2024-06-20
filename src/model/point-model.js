@@ -8,14 +8,14 @@ import { getSorted } from '../utils/sort';
 export default class PointModel extends Observable {
   #destinations = [];
   #offers = [];
-  #trips = [];
+  #points = [];
   #filters = [];
   #currentFilter = DEFAULT_FILTER;
   #currentSort = DEFAULT_SORT_TYPE;
   #tripApiService = new TripApiService(BASE_URL, AUTHORIZATION);
 
   get trip() {
-    return this.#trips;
+    return this.#points;
   }
 
   get offers() {
@@ -43,7 +43,7 @@ export default class PointModel extends Observable {
   }
 
   get info() {
-    const sortedTrip = getSorted(this.#trips, DEFAULT_SORT_TYPE);
+    const sortedTrip = getSorted(this.#points, DEFAULT_SORT_TYPE);
     return getInfo(sortedTrip, this.#destinations, this.#offers);
   }
 
@@ -51,13 +51,13 @@ export default class PointModel extends Observable {
     try {
       this.#destinations = await this.#tripApiService.getDestinations();
       this.#offers = await this.#tripApiService.getOffers();
-      this.#trips = (await this.#tripApiService.getPoints()).map(TripApiService.adaptToClient);
+      this.#points = (await this.#tripApiService.getPoints()).map(TripApiService.adaptToClient);
       this.#filters = Object.values(Filter);
       this._notify(UpdateType.INIT);
     } catch(error) {
       this.#destinations = [];
       this.#offers = [];
-      this.#trips = [];
+      this.#points = [];
       this._notify(UpdateType.ERROR);
     }
   };
@@ -70,7 +70,7 @@ export default class PointModel extends Observable {
   addPoint = async (updateType, point) => {
     try {
       const newPoint = await this.#tripApiService.addPoint(point);
-      this.#trips.push(newPoint);
+      this.#points.push(newPoint);
       this._notify(updateType, newPoint);
     } catch(error) {
       throw new Error(`Add error: ${error.message}`);
@@ -99,12 +99,12 @@ export default class PointModel extends Observable {
     }
     try {
       await this.#tripApiService.deletePoint(point);
-      this.#trips = removeItem(this.#trips, selectedPoint);
+      this.#points = removeItem(this.#points, selectedPoint);
       this._notify(updateType);
     } catch(error) {
       throw new Error(`Delete error: ${error.message}`);
     }
   };
 
-  #findPoint = (id) => this.#trips.find((point) => point.id === id);
+  #findPoint = (id) => this.#points.find((point) => point.id === id);
 }
