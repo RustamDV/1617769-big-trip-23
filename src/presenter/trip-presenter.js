@@ -4,7 +4,7 @@ import TripView from '../view/trip-view';
 import LoadingView from '../view/loading-view';
 import PointPresenter from './point-presenter';
 import NewPointPresenter from './new-point-presenter';
-import { UserAction, UpdateType, Messages, DEFAULT_SORT_TYPE, DEFAULT_FILTER,
+import { UserAction, UpdateType, Message, DEFAULT_SORT_TYPE, DEFAULT_FILTER,
   TripEmptyMessages, UiBlockerConfig } from '../const/common';
 import UiBlocker from '../framework/ui-blocker/ui-blocker';
 import { getFiltered } from '../utils/filter';
@@ -72,9 +72,9 @@ export default class TripPresenter {
     const getMessage = () => {
       switch (true) {
         case this.#isLoading:
-          return Messages.LOADING;
+          return Message.LOADING;
         case this.#isError:
-          return Messages.ERROR;
+          return Message.ERROR;
         case isEmpty(this.trip):
           return TripEmptyMessages[this.#model.currentFilter];
         default:
